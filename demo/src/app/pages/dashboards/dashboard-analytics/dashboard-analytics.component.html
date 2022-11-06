@@ -1,0 +1,72 @@
+<vex-secondary-toolbar current="">
+  <vex-breadcrumbs [crumbs]="['Hisse Senedi Analizi']" class="flex-auto"></vex-breadcrumbs>
+  <button class="ml-2" color="primary" mat-icon-button type="button">
+    <mat-icon [icIcon]="icMoreVert"></mat-icon>
+  </button>
+</vex-secondary-toolbar>
+<div class="p-gutter"
+     gdColumns="1fr 1fr 1fr 1fr"
+     gdColumns.lt-md="1fr 1fr"
+     gdColumns.lt-sm="1fr"
+     gdGap="16px"
+     vexContainer>
+
+     <mat-form-field appearance="fill" [formGroup]="toolbarFilterForm">
+      <mat-label>Hisse Seçiniz</mat-label>
+      <mat-select  formControlName="symbols" multiple>
+        <mat-option *ngFor="let share of shareList" [value]="share">{{share}}</mat-option>
+      </mat-select>
+     </mat-form-field>
+    
+     <mat-form-field appearance="fill">
+      <mat-label>Tarih Seçiniz</mat-label>
+      <mat-date-range-input [formGroup]="toolbarFilterForm" [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Start date">
+        <input matEndDate formControlName="end" placeholder="End date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+     </mat-form-field> 
+
+    <mat-form-field appearance="fill" [formGroup]="toolbarFilterForm">
+      <mat-label>Period Seçiniz</mat-label>
+      <mat-select formControlName="periodControl" >
+        <mat-option *ngFor="let period of periods" [value]="period.value" >
+          {{period.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary"  (click)="showData()" style="height: 3rem;">Göster</button>
+   
+ 
+</div>
+<fusioncharts
+    width="100%"
+    height="400"
+    type="line"
+    [dataSource]="dataSource"
+>
+</fusioncharts>
+<div>
+  <table mat-table [dataSource]="tableDataSource" style="width: 100%;"*ngIf="tableDataSource.length>0">
+    <ng-container matColumnDef="symbols">
+      <th mat-header-cell *matHeaderCellDef> Hisse Adı </th>
+      <td mat-cell *matCellDef="let element"> {{element.symbols}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Period </th>
+      <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef> Değer </th>
+      <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
+
