@@ -35,7 +35,6 @@ export class CustomLayoutComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-    console.log("custoommmmmm")
     this.layoutService.configpanelOpen$.pipe(
       untilDestroyed(this)
     ).subscribe(open => open ? this.configpanel.open() : this.configpanel.close());

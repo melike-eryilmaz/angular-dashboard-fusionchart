@@ -14,7 +14,6 @@ export class DashboardAnalyticsComponent implements OnInit {
 displayedColumns: string[] = ['symbols', 'date', 'value'];
 tableDataSource = [];
 // Preparing the chart data
-fusionChartData = [];
 // Chart Configuration
  dataSource = {
   chart: {
@@ -25,7 +24,7 @@ fusionChartData = [];
     numberSuffix: "K",
     theme: "fusion" 
   },
-  data: this.fusionChartData
+  data: []
 };
   toolbarFilterForm:FormGroup;
   periods = [
@@ -79,17 +78,18 @@ fusionChartData = [];
         {
           this.chartData=[];
           this.tableDataSource = [];
+          this.dataSource.data = [];
           data = data[`Time Series (${period})`];
            for(var i in data){
             this.chartData.push({
-              date : i,
+              date : this.datepipe.transform(i, 'yyyy-MM-dd'),
               value : data[i]['4. close']
             });
           }
-          var filteredData = this.chartData.filter((x)=>this.datepipe.transform(x.date, 'yyyy-MM-dd')>=startDate && this.datepipe.transform(x.date, 'yyyy-MM-dd')<=endDate );
+          var filteredData = this.chartData.filter((x)=>x.date >= startDate && x.date <= endDate );          
           this.dataSource.chart.caption = symbols;     
           for (let k = 0; k < filteredData.length; k++) {
-            this.fusionChartData.push({
+            this.dataSource.data.push({
               label:filteredData[k].date,
               value:filteredData[k].value
             });
@@ -101,7 +101,6 @@ fusionChartData = [];
           } 
         }
       );
-
     }
   }
 }
